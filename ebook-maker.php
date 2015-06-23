@@ -1,10 +1,10 @@
 <?php
 /*
   Plugin Name: eBook Maker
-  Plugin URI: 
+  Plugin URI: https://github.com/robogeek/wp-ebook-maker
   Description: Assist with constructing eBooks on a Wordpress website
-  Version: 0.1
-  Author: 
+  Version: 0.1.1
+  Author: David Herron
   License: GPLv2 or later
 
   This program is free software; you can redistribute it and/or modify
@@ -45,12 +45,13 @@ function ebookmaker_init() {
             'not_found'          => __( 'No books found.', 'your-plugin-textdomain' ),
             'not_found_in_trash' => __( 'No books found in Trash.', 'your-plugin-textdomain' )
         ),
-        'public' => true,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'ebooks'),
-        'hierarchical'       => true,
-		'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'page-attributes' ),
-		'show_ui'            => true,
+        'public'         => true,
+        'has_archive'    => true,
+        'rewrite'        => array('slug' => 'ebooks', 'feeds' => true, 'with_front' => true),
+        'hierarchical'   => true,
+		'supports'       => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'page-attributes' ),
+		'show_ui'        => true,
+		'taxonomies'     => array( 'post_tag' )
     )
   );
     
