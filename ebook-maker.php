@@ -57,6 +57,86 @@ function ebookmaker_init() {
     
 }
 
+
+function ebook_maker_show_prev_next($post) {
+	
+    $posttop = array_reverse(get_post_ancestors($post->ID))[0];
+    
+    if ($posttop) {
+        $postID = $posttop;
+        $post_parent = get_post($posttop);
+        $post_title = $post_parent->post_title;
+    } else {
+        $postID = $post->ID;
+        $post_title = $post->post_title;
+    }
+	
+	// $posttop = ebook_maker_tree_top($post);
+	// $postID = $posttop->ID;
+	// $post_title = $posttop->post_title;
+	// $post_parent = get_post($posttop);
+
+	$pgs = get_pages(array(
+	  'post_type' => 'ebook_page',
+	  'sort_column' => 'menu_order',
+	  'child_of' => $postID,							
+	  'hierarchical' => 1,
+	  ));
+
+	// print_r($pgs);
+	  
+	for ($pgsindx = 0; $pgsindx < count($pgs); $pgsindx++) {
+	  if ($pgs[$pgsindx]->ID == $post->ID) {
+		  // echo 'FOUND '. $pgsindx .' '. $pgs[$pgsindx]->ID .' '. $pgs[$pgsindx]->post_title;
+		  $pgcur = $pgs[$pgsindx];
+		  // print_r($pgs[$pgsindx]);
+		  
+		  $pgsprevindx = $pgsindx - 1;
+		  if ($pgsprevindx < 0) $pgsprevindx = count($pgs) - 1;
+		  // echo 'PREV '. $pgsprevindx .' '. $pgs[$pgsprevindx]->ID .' '. $pgs[$pgsprevindx]->post_title;
+		  $pgprev = $pgs[$pgsprevindx];
+		  // print_r($pgs[$pgsprevindx]);
+		  
+		  
+		  $pgsnextindx = $pgsindx + 1;
+		  if ($pgsnextindx >= count($pgs)) $pgsnextindx = 0;
+		  // echo 'NEXT '. $pgsnextindx .' '. $pgs[$pgsnextindx]->ID .' '. $pgs[$pgsnextindx]->post_title;
+		  $pgnext = $pgs[$pgsnextindx];
+		  // print_r($pgs[$pgsnextindx]);
+		  
+		  break;
+	  }
+	}
+	
+	if ($pgprev || $pgnext) {
+		?><div id="nav-below" class="navigation"><?php
+	}
+	
+	if ($pgprev) {
+	  ?><div class="nav-previous"><a href="<?php
+			  echo get_permalink($pgprev->ID);
+	  ?>">&laquo; <?php echo $pgprev->post_title; ?></a></div><?php
+	}
+	
+	/* if ($pgcur) {
+	  ? ><p>CUR <a href="< ?php
+			  echo get_permalink($pgcur->ID);
+	  ? >">< ?php echo $pgcur->post_title; ? ></a></p>< ?php
+	} */
+	
+	if ($pgnext) {
+	  ?><div class="nav-next"><a href="<?php
+			  echo get_permalink($pgnext->ID);
+	  ?>"><?php echo $pgnext->post_title; ?> &raquo;</a></div><?php
+	}
+	
+	if ($pgprev || $pgnext) {
+		?></div><?php
+	}
+	
+							  						  					  
+}
+
 /**
  * Template tag to display the full page hierarchy.
  */
